@@ -1,0 +1,26 @@
+/* Styles go here */
+table {
+  border: 1px solid white;
+}
+table#bets {
+  width: 200px;
+}
+td{
+  text-align: center;
+}
+.row {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  border-spacing: 10px;
+}
+.column {
+  display: table-cell;
+  background-color: #ffffff;
+}
+.column#results {
+  background-color: #eeeeee;
+  height:300px;
+  text-align: right
+  vertical-align: middle;
+}
