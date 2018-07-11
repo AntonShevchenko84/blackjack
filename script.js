@@ -1,5 +1,4 @@
 // Code goes here
-//Initial code by me
 window.onload = function() {
 var game = newGame();
   /*extra*/
@@ -43,7 +42,7 @@ function consoleLog(message) {
   /* Implement data storage*/
   function createGame(players) {
     if (players.length == 2) {
-      console.log('game created' + Date.now());
+      //console.log('game created' + Date.now());
       return {
         date: Date.now(), 
         number: 0,
@@ -51,26 +50,22 @@ function consoleLog(message) {
         moves:[],
         currentPlayer: '',
         togglePlayers: function() {
-          console.log('before' + this.currentPlayer.name);
+       //  console.log('before' + this.currentPlayer.name);
           if ( this.currentPlayer.name == this.players[0].name) {
             this.currentPlayer = this.players[1];
           }
           else {
             this.currentPlayer = this.players[0];
           }
-          console.log('after' + this.currentPlayer.name);
+        //  console.log('after' + this.currentPlayer.name);
         },
         addMove: function(player, score) {
-          var _score = this.calculateScore();
-          if (( _score + score) < 21)  {
-              this.moves.push({name: player.name, score: score});
+            this.moves.push({name: player.name, score: score});
               return true;
-          }
-          else 
-            return false;
         },
         calculateScore: function(name) {
           var sum = 0;
+        //  console.log('calculate  player.name='+name);
           for (i=0;i<this.moves.length;i++) {
              if ( this.moves[i].name ==name )  
                 sum += this.moves[i].score
@@ -110,9 +105,9 @@ function createThing(param) {
   
   /* UI funcitons */
   
-  function addToHistory(game,player, move) {
+  function addToHistory(player, move) {
    
-      console.log('func:addToHistory: player' + player +'move:' + move);
+      console.log('addToHistory(): player ' + player.name +' move: ' + move);
       var table = document.getElementById('tb.bets');
       var row = table.insertRow(-1);
       if (player == game.players[0]) {
@@ -124,7 +119,7 @@ function createThing(param) {
         var cell2 = row.insertCell(1); cell2.innerHTML = move;
       }
   }
-  function clearHistory(game) {
+  function clearHistory() {
     //hack
     //document.getElementById('p.info').innerHTML = 'Current player is ' + game.currentPlayer.name
     document.getElementById('p.info').innerHTML = 'Current player is ' + game.players[0].name
@@ -132,8 +127,8 @@ function createThing(param) {
     var table = document.getElementById('tb.bets');
     var length = table.rows.length;
     if (length >1) {
-      for (i=length; i>0; i--) {
-         table.deleteRow(i);
+      for (i=length; i>1; i--) {
+         table.deleteRow(i-1);
       }
     }
     table.rows[0].cells[0].innerHTML = game.players[0].name;
@@ -148,18 +143,24 @@ function createThing(param) {
     }
   function hitAction() {
 
-    playerName = game.currentPlayer.name;
-    bet = getRandomInt(4);
-    move = [playerName, bet];
-    console.log(move);
-    if (game.addMove(move)) {
-      addToHistory(game,game.currentPlayer, bet);
-    }
-    if ( game.calculateScore == 21) {
-      addToHistory(game,game.currentPlayer, bet);
+    var bet = getRandomInt(6);
+    var sum = game.calculateScore(game.currentPlayer.name) + bet;
+    console.log('hitAction(): name:'+game.currentPlayer.name+' sum: '+ sum);
+    if (sum < 21) {
+      game.addMove(game.currentPlayer, bet);
+      addToHistory(game.currentPlayer, bet);
+      game.togglePlayers();
+      document.getElementById('p.info').innerHTML = 'Current player is ' + game.currentPlayer.name;
+    } 
+     else if ( sum == 21) {
+      console.log('Winner is ' + game.currentPlayer.name);
+      addToHistory(game.currentPlayer, bet);
       drawWinnerHistory(game);
     }
-    game.togglePlayers();
+    else if ( sum > 21 ) {
+      console.log('This bet is no-way!');
+    }
+    
   }
   function stayAction() {
     console.log('Action STAY');
